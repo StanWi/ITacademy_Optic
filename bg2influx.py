@@ -1,5 +1,4 @@
-from datetime import datetime
-import pytz
+from datetime import datetime, timezone
 import os
 import csv
 from influxdb_client import InfluxDBClient
@@ -18,11 +17,8 @@ def time_file(filename: str) -> str:
     date = filename[-18:-10]  # 20230103
     time = filename[-10:-4]  # 073311
     r = datetime.strptime(date + time, "%Y%m%d%H%M%S")
-    local = pytz.timezone('Asia/Irkutsk')
-    local_dt = local.localize(r, is_dst=None)
-    utc_dt = local_dt.astimezone(pytz.utc)
-    s = (utc_dt.replace(tzinfo=None) - datetime(1970, 1, 1)).total_seconds()
-    rounded = (s + 900 / 2) // 900 * 900
+    s = r.timestamp()
+    rounded = (s + 900 / 2) // 900 * 900 - 8 * 60 * 60
     dt_utc = datetime.fromtimestamp(rounded)
     dt_formatted = dt_utc.strftime('%Y-%m-%dT%H:%M:%SZ')
     return dt_formatted
