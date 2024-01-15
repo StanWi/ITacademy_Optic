@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 import os
 import csv
 from influxdb_client import InfluxDBClient
@@ -24,7 +24,7 @@ def time_file(filename: str) -> str:
     return dt_formatted
 
 
-def read_csv(file):
+def read_csv(file: str) -> list:
     with open(data_path + file, encoding='utf-8') as file_open:
         r = []
         file_reader = csv.reader(file_open)
